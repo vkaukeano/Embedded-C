@@ -1,0 +1,108 @@
+#include <avr/io.h>
+#include "avr/iom324pb.h"
+#define F_CPU 16000000UL
+#include <util/delay.h>
+#include <avr/interrupt.h>
+#include "SSD1306.h"
+#include "i2c.h"
+
+unsigned char Z;
+unsigned char INPUT;
+volatile int COUNTER = 0;
+volatile int OVERFLOW = 0;
+
+int main(void)
+{
+	OLED_Init();  //initialize the OLED
+	_delay_ms(1);
+	OLED_Clear(); //clear the display (for good measure)
+	
+	Z = 0X0F; //Masking
+	DDRB = 0X00; //PORTB INPUT
+	PORTB = 0XFF; // PULLUP RESISTORS ACTIVATED
+	DDRE |= (1<<PINE2);
+	DDRD |= (1<<PIND7);
+	PORTD |= (1<<PIND7);
+	
+	DDRD |= (0<<PORTD2);// Port D input
+	PORTD |= (1<<PORTD2);// Set Pull up resistor PD2 (INT0)
+	EIMSK=(1<<INT0);
+	TIMSK1 = (1 << TOIE1);
+	EICRA=0X03; //INT0 WILL ACTIVATE Rising EDGE TRIGGER
+
+	// Initialize PWM to 50% duty cycle round(255/127)
+	// Initialize counter
+	TCNT1 = 0;
+	OCR2A = 0;
+	// Non-inverting Fast PWM Mode 7
+	// START the PWM timer with 64 Pre-scaler
+	// I/O Clock @ 16 MHz
+	//
+	TCCR1B |= (1 << CS11);
+	TCCR2A |= (1 << WGM21)|(1<<WGM20)|(1 << COM2A1);
+	TCCR2B |= (1<<CS42)|(1 << CS40);
+
+	sei();// Set Interrupt Flag
+	while (1){
+
+		INPUT = PINB & Z;
+		switch(INPUT){
+			
+			case(0x01):
+			OCR2A = 25;
+			break;
+			
+			case(0x02):
+			OCR2A = 51;
+			break;
+
+			case(0x03):
+			OCR2A = 76;
+			break;
+			
+			case(0x04):
+			OCR2A = 102;
+			break;
+			
+			case(0x05):
+			OCR2A = 127;
+			break;
+			
+			case(0x06):
+			OCR2A = 153;
+			break;
+			
+			case(0x07):
+			OCR2A = 178;
+			break;
+
+			case(0x08):
+			OCR2A = 204;
+			break;
+
+			case(0x09):
+			OCR2A = 229;
+			break;
+
+			default:
+			OCR2A = 0;
+		}
+
+	}
+}
+// External Interrupt on Port D Pin 2
+ISR(INT0_vect, ISR_BLOCK){
+	COUNTER++;// Increment counter when pin changes
+}
+
+ISR(TIMER1_OVF_vect){
+	OVERFLOW++;
+	COUNTER = (COUNTER/2);
+	if(OVERFLOW >=33){
+		OLED_SetCursor(4, 0);//set the cursor position to (0, 0)
+		OLED_Printf("RPS:");
+		OLED_DisplayNumber(C_DECIMAL_U8,COUNTER,3); //Print out some text
+		OVERFLOW = 0;
+		COUNTER=0;
+	}
+}
