@@ -1,0 +1,43 @@
+#define F_CPU 16000000UL
+#include <util/delay.h>
+#include <avr/io.h>
+
+
+int main(void)
+{
+    DDRA = 0xFF;
+	
+    while (1) 
+    {
+		TCNT0 = 0x83; //D7
+		TCCR0B = 0x03;//03
+		while ((TIFR0&(1 <<TOV0))==0);
+		TCCR0B = 0;
+		TIFR0 = (1<<TOV0);
+		PORTA = ~PORTA;
+    }
+
+
+2. 
+
+
+LDI R16,0xFF
+OUT DDRA,R16
+BEGIN:
+LDI R20,0X83
+OUT TCNT0,R20
+LDI R20,03
+OUT TCCR0B,R20
+AGAIN:
+IN R20,TIFR0
+SBRS R20,0
+RJMP AGAIN
+LDI R20,0X00
+OUT TCCR0B,R20
+LDI R20,(1<<TOV0)
+OUT TIFR0,R20
+EOR R17,R16
+OUT PORTA,R17
+RJMP BEGIN
+
+
