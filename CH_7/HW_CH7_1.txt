@@ -1,0 +1,79 @@
+#define F_CPU 16000000UL
+#include <util/delay.h>
+#include <avr/io.h>
+
+
+int main(void)
+{
+    DDRA = 0Xff; // PORTA OUTPUT
+	DDRB = 0x00; // PORTB INPUT
+	PORTB = 0Xff; // ACTIVATE PULLUP RESISTORS
+	
+	unsigned char zero = 0X3F;
+	unsigned char one = 0X06;
+	unsigned char two = 0X5B;
+	unsigned char three = 0X4F;
+	unsigned char four = 0X66;
+	unsigned char five = 0X6D;
+	unsigned char six = 0X7D;
+	unsigned char seven = 0X07;
+	unsigned char eight = 0X7F;
+	unsigned char nine = 0X67;
+	unsigned char z;
+	z = 0x01;
+	
+	unsigned char input;
+	while (1) {
+	
+	input = PINB & z;
+		
+	if(input == 0){
+		PORTA = zero;
+		_delay_ms(500);
+		PORTA = one;
+		_delay_ms(500);
+		PORTA = two;
+		_delay_ms(500);
+		PORTA = three;
+		_delay_ms(500);
+		PORTA = four;
+		_delay_ms(500);
+		PORTA = five;
+		_delay_ms(500);
+		PORTA = six;
+		_delay_ms(500);
+		PORTA = seven;
+		_delay_ms(500);
+		PORTA = eight;
+		_delay_ms(500);
+		PORTA = nine;
+		_delay_ms(500);
+}
+else {
+PORTA = nine;
+_delay_ms(1000);
+PORTA = eight;
+_delay_ms(1000);
+PORTA = seven;
+_delay_ms(1000);
+PORTA = six;
+_delay_ms(1000);
+PORTA = five;
+_delay_ms(1000);
+PORTA = four;
+_delay_ms(1000);
+PORTA = three;
+_delay_ms(1000);
+PORTA = two;
+_delay_ms(1000);
+PORTA = one;
+_delay_ms(1000);
+PORTA = zero;
+_delay_ms(1000);
+}
+
+	}
+	
+	return 0;
+}
+

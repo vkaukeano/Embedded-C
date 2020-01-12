@@ -1,0 +1,25 @@
+#define F_CPU 16000000UL
+#include <util/delay.h>
+#include <avr/io.h>
+
+
+int main(void)
+{
+	DDRA = 0XFF;
+	derby = 0xFF;
+	unsigned int n; // counter
+	unsigned int i; //increment
+	
+	unsigned char input;
+	
+	input = 0b10101011;
+	
+	for(i=0;i<=8;i++){
+		if((input & 1) == 1){
+			n++;
+		}
+	input = input >> 1;
+	}
+	PORTA = n;
+}
+

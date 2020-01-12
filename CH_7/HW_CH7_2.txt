@@ -1,0 +1,94 @@
+#define F_CPU 16000000UL
+#include <util/delay.h>
+#include <avr/io.h>
+
+
+int main(void)
+{
+	DDRA = 0Xff; // PORTA OUTPUT
+	DDRB = 0x00; // PORTB INPUT
+	PORTB = 0Xff; // ACTIVATE PULLUP RESISTORS
+	
+	unsigned char zero = '0';
+	unsigned char one = '1';
+	unsigned char two = '2';
+	unsigned char three = '3';
+	unsigned char four = '4';
+	unsigned char five = '5';
+	unsigned char six = '6';
+	unsigned char seven = '7';
+	unsigned char eight = '8';
+	unsigned char nine = '9';
+	unsigned char ten = 'A';
+	unsigned char eleven = 'B';
+	unsigned char twelve = 'C';
+	unsigned char thirteen = 'D';
+	unsigned char fourteen = 'E';
+	unsigned char fifteen = 'F';
+	unsigned char z;
+	z = 0x0F;
+	
+	unsigned char input;
+	
+	while (1) {
+		
+		input = PINB & z;
+		
+		switch(input){
+			case(0b00000000):
+			PORTA = zero;
+			break;
+			case(0b00000001):
+			PORTA = one;
+			break;
+			case(0b00000010):
+			PORTA = two;
+			break;
+			case(0b00000011):
+			PORTA = three;
+			break;
+			case(0b00000100):
+			PORTA = four;
+			break;
+			case(0b00000101):
+			PORTA = five;
+			break;
+			case(0b00000110):
+			PORTA = six;
+			break;
+			case(0b00000111):
+			PORTA = seven;
+			break;
+			case(0b00001000):
+			PORTA = eight;
+			break;
+			case(0b00001001):
+			PORTA = nine;
+			break;
+			case(0b00001010):
+			PORTA = ten;
+			break;
+			case(0b00001011):
+			PORTA = eleven;
+			break;
+			case(0b00001100):
+			PORTA = twelve;
+			break;
+			case(0b00001101):
+			PORTA = thirteen;
+			break;
+			case(0b00001110):
+			PORTA = fourteen;
+			break;
+			case(0b00001111):
+			PORTA = fifteen;
+			break;
+			default:
+			PORTA = '0';
+		}
+
+	}
+	
+	return 0;
+}
+
